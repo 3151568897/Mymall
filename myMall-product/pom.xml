@@ -71,7 +71,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                    <mainClass>com.example.mymall.MyMallProductApplication</mainClass>
+                    <mainClass>com.example.mymall.product.MyMallProductApplication</mainClass>
                     <skip>true</skip>
                 </configuration>
                 <executions>

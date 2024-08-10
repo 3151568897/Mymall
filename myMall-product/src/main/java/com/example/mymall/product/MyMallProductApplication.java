@@ -1,13 +1,14 @@
-package com.example.mymall;
+package com.example.mymall.product;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 
 @MapperScan("com.example.mymall.product.dao")
-@ComponentScan(basePackages = {"com.example.mymall.product"})
 @SpringBootApplication
+@EnableDiscoveryClient
 public class MyMallProductApplication {
 
     public static void main(String[] args) {
