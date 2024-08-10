@@ -1,8 +1,10 @@
 package com.example.mymall.member.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
+import com.example.mymall.member.feign.CouponFeignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +31,18 @@ import com.example.common.utils.R;
 public class MemberController {
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private CouponFeignService couponFeignService;
+
+
+    @RequestMapping("/test")
+    public R test(){
+        Map<String, Object> map = new HashMap<>();
+        map.put("name",1);
+        map.put("age",1);
+        return R.ok(couponFeignService.list(map)+"\n sfsdafsdf");
+    }
 
     /**
      * 列表
