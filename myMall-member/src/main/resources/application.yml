@@ -4,10 +4,18 @@ spring:
     password: root
     url: jdbc:mysql://192.168.10.131:3306/mymall_ums?serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   cloud:
     nacos:
+      serverAddr: 127.0.0.1:8848
+#      username: nacos
+#      password: nacos
       discovery:
         server-addr: 127.0.0.1:8848
+  config:
+    import:
+      - nacos:mymall-member.properties?refreshEnabled=true&group=DEFAULT_GROUP
+
   application:
     name: myMall-member
 mybatis-plus:

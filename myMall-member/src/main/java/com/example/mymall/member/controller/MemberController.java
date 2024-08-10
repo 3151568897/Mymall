@@ -6,6 +6,8 @@ import java.util.Map;
 
 import com.example.mymall.member.feign.CouponFeignService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,14 +28,16 @@ import com.example.common.utils.R;
  * @email wupeng@gmail.com
  * @date 2024-08-10 16:02:18
  */
+@RefreshScope
 @RestController
 @RequestMapping("member/member")
 public class MemberController {
     @Autowired
     private MemberService memberService;
-
     @Autowired
     private CouponFeignService couponFeignService;
+    @Value("${member.user.name}")
+    private String name;
 
 
     @RequestMapping("/test")
@@ -41,7 +45,7 @@ public class MemberController {
         Map<String, Object> map = new HashMap<>();
         map.put("name",1);
         map.put("age",1);
-        return R.ok(couponFeignService.list(map)+"\n sfsdafsdf");
+        return R.ok(couponFeignService.list(map)+"\n sfsdafsdf+"+" name:"+name);
     }
 
     /**
