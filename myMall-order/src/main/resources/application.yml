@@ -6,8 +6,17 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   cloud:
     nacos:
+      serverAddr: 127.0.0.1:8848
+      #      username: 'nacos'
+      #      password: 'nacos'
+      config:
+        namespace: order
+        group: dev
       discovery:
         server-addr: 127.0.0.1:8848
+  config:
+    import:
+      - nacos:mymall-order.properties?refreshEnabled=true
   application:
     name: myMall-order
 mybatis-plus:

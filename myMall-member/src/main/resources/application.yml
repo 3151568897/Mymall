@@ -12,9 +12,12 @@ spring:
 #      password: nacos
       discovery:
         server-addr: 127.0.0.1:8848
+      config:
+        namespace: member
+        group: dev
   config:
     import:
-      - nacos:mymall-member.properties?refreshEnabled=true&group=DEFAULT_GROUP
+      - nacos:mymall-member.properties?refreshEnabled=true
 
   application:
     name: myMall-member

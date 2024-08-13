@@ -22,6 +22,7 @@
 
     <modules>
         <module>myMall-common</module>
+        <module>myMall-gateway</module>
         <module>myMall-product</module>
         <module>myMall-coupon</module>
         <module>myMall-member</module>
