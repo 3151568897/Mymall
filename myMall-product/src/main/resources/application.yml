@@ -6,23 +6,16 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   cloud:
     nacos:
-      serverAddr: 127.0.0.1:8848
-      #      username: 'nacos'
-      #      password: 'nacos'
-      config:
-        namespace: product
-        group: dev
       discovery:
         server-addr: 127.0.0.1:8848
-  config:
-    import:
-      - nacos:mymall-product.properties?refreshEnabled=true
-  application:
-    name: myMall-product
+
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
   global-config:
     db-config:
       id-type: auto
+      logic-delete-value: 1
+      logic-not-delete-value: 0
 server:
   port: 10000
+
