@@ -1,24 +1,25 @@
 package com.example.mymall;
 
-import com.example.mymall.product.entity.BrandEntity;
-import com.example.mymall.product.service.BrandService;
+
+import com.example.mymall.product.MyMallProductApplication;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class MyMallProductApplicationTests {
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
-    @Autowired
-    BrandService brandService;
+@SpringBootTest(classes = MyMallProductApplication.class)
+class MyMallProductApplicationTests {
 
     @Test
     void contextLoads() {
-        BrandEntity brandEntity = new BrandEntity();
-        brandEntity.setName("华为");
-        brandEntity.setDescript("华为手机品牌");
-        brandEntity.setShowStatus(1);
-        brandService.save(brandEntity);
+
     }
 
 }
