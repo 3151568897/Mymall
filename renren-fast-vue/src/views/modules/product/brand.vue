@@ -1,6 +1,6 @@
 <template>
   <div class="mod-config">
-    <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
+    <el-form :inline="true" :model="dataForm" :rules="rules" @keyup.enter.native="getDataList()">
       <el-form-item>
         <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
       </el-form-item>
@@ -39,6 +39,9 @@
         header-align="center"
         align="center"
         label="品牌logo地址">
+        <template slot-scope="scope">
+          <img style="width: 100px; height: 80px" :src=scope.row.logo></img>
+        </template>
       </el-table-column>
       <el-table-column
         prop="descript"
@@ -99,6 +102,7 @@
 <script>
   import AddOrUpdate from './brand-add-or-update'
   import {isAuth} from '../../../utils'
+
   export default {
     data () {
       return {

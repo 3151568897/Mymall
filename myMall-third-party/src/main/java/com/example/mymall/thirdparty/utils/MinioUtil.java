@@ -5,6 +5,7 @@ import io.minio.http.Method;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,25 +14,18 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Component
 @Slf4j
 public class MinioUtil {
+
     @Autowired
     private MinioClient minioClient;
 
-    /**
-     * 创建bucket
-     * */
-    private void createBucket(String bucketName) throws Exception {
-        BucketExistsArgs existsArgs = BucketExistsArgs.builder().bucket(bucketName).build();
-        if(!minioClient.bucketExists(existsArgs)) {
-            MakeBucketArgs makeArgs = MakeBucketArgs.builder().bucket(bucketName).build();
-            minioClient.makeBucket(makeArgs);
-            log.info("bucket {} 不存在， 自动创建该bucket", bucketName);
-        }
-    }
 
     /**
      * 从给定输入流中传输对象并放入bucket
@@ -40,13 +34,12 @@ public class MinioUtil {
         if (StringUtils.isEmpty(bucketName)) {
             throw new RuntimeException("保存的bucketName为空");
         }
-        createBucket(bucketName);
         //long objSize = -1;
         long partSize = -1; //objectSize已知，partSize设为-1意为自动设置
         PutObjectArgs putArgs = PutObjectArgs.builder()
                 .bucket(bucketName)
                 .object(objectName)
-                .stream(stream, objectSize, partSize)
+                .stream(stream, stream.available(), -1)
                 .contentType(contentType)
                 .build();
         ObjectWriteResponse response = minioClient.putObject(putArgs);
@@ -71,13 +64,7 @@ public class MinioUtil {
      * 获取对象的临时访问url，有效期5分钟
      * */
     public String getObjectURL(String bucketName, String objectName) throws Exception{
-        GetPresignedObjectUrlArgs args = GetPresignedObjectUrlArgs.builder()
-                .bucket(bucketName)
-                .object(objectName)
-                .expiry(5, TimeUnit.MINUTES)
-                .method(Method.GET)
-                .build();
-        return minioClient.getPresignedObjectUrl(args);
+        return minioClient.getObjectUrl(bucketName, objectName);
     }
 
     /**

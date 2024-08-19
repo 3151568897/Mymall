@@ -17,7 +17,7 @@ public class MyMallCorsConfiguration {
         //配置跨域
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        config.addAllowedOriginPattern("*");
+        config.addAllowedOriginPattern("http://localhost:8001");
         config.setAllowCredentials(true);
 
         source.registerCorsConfiguration("/**", config);
