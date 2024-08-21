@@ -1,11 +1,11 @@
 package com.example.mymall.product.service.impl;
 
+import com.example.mymall.product.service.CategoryBrandRelationService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,6 +18,7 @@ import com.example.common.utils.Query;
 import com.example.mymall.product.dao.CategoryDao;
 import com.example.mymall.product.entity.CategoryEntity;
 import com.example.mymall.product.service.CategoryService;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("categoryService")
@@ -25,6 +26,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Autowired
     CategoryDao categoryDao;
+    @Autowired
+    CategoryBrandRelationService categoryBrandRelationService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -49,9 +52,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             //找到子菜单
             menu.setChildren(getChildrens(menu, entities));
             return menu;
-        }).sorted((menu1, menu2) -> {
-            return (menu1.getSort() == null?0:menu1.getSort()) - (menu2.getSort()==null?0:menu2.getSort());
-        }).collect(Collectors.toList());
+        }).sorted(Comparator.comparingInt(menu -> (menu.getSort() == null ? 0 : menu.getSort()))).collect(Collectors.toList());
 
 
         return level1Menus;
@@ -63,6 +64,35 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
         //逻辑删除
         baseMapper.deleteBatchIds(list);
+    }
+
+    @Override
+    public Long[] findCatelogPath(Long catelogId) {
+        List<Long> paths = new ArrayList<>();
+        List<Long> parentPath = findParentPath(catelogId, paths);
+
+        return parentPath.toArray(new Long[parentPath.size()]);
+    }
+
+    @Override
+    @Transactional
+    public void updateCascade(CategoryEntity category) {
+        //更新其他冗余表
+        this.updateById(category);
+        if(!StringUtils.isEmpty(category.getName())){
+            categoryBrandRelationService.updateCategory(category.getCatId(), category.getName());
+        }
+    }
+
+    private List<Long> findParentPath(Long catelogId, List<Long> paths){
+        CategoryEntity byId = this.getById(catelogId);
+        paths.add(byId.getCatId());
+
+        if(byId.getParentCid() != 0){
+            findParentPath(byId.getParentCid(), paths);
+        }
+        Collections.reverse(paths);
+        return paths;
     }
 
     private List<CategoryEntity> getChildrens(CategoryEntity root, List<CategoryEntity> all){

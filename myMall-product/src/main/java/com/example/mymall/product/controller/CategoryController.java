@@ -41,6 +41,7 @@ public class CategoryController {
         return R.ok().put("page", page);
     }
 
+
     /**
      * 查出所有分类以及子分类,并以树形结构装起来
      */
@@ -77,7 +78,7 @@ public class CategoryController {
      */
     @RequestMapping("/update")
     public R update(@RequestBody CategoryEntity category){
-		categoryService.updateById(category);
+		categoryService.updateCascade(category);
 
         return R.ok();
     }

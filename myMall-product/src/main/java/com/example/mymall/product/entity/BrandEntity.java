@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 
 import com.example.common.valid.AddGroup;
+import com.example.common.valid.ListValue;
 import com.example.common.valid.UpdateGroup;
+import com.example.common.valid.UpdateStatusGroup;
 import lombok.Data;
 import lombok.Value;
 import org.hibernate.validator.constraints.URL;
@@ -30,7 +32,7 @@ public class BrandEntity implements Serializable {
 	 */
 	@TableId
 	@Null(message = "新增不能指定id", groups = {AddGroup.class})
-	@NotNull(message = "修改必须指定id", groups = {UpdateGroup.class})
+	@NotNull(message = "修改必须指定id", groups = {UpdateGroup.class, UpdateStatusGroup.class})
 	private Long brandId;
 	/**
 	 * 品牌名
@@ -50,12 +52,14 @@ public class BrandEntity implements Serializable {
 	/**
 	 * 显示状态[0-不显示；1-显示]
 	 */
+	@NotNull(groups = {AddGroup.class, UpdateStatusGroup.class})
+	@ListValue(vals = {1, 0}, groups = {AddGroup.class, UpdateStatusGroup.class})
 	private Integer showStatus;
 	/**
 	 * 检索首字母
 	 */
 	@NotNull(groups = {AddGroup.class})
-	@Pattern(regexp = "/^[a-zA-Z]$/", message = "检索首字母必须是一个字母", groups = {AddGroup.class, UpdateGroup.class})
+	@Pattern(regexp = "^[a-zA-Z]$", message = "检索首字母必须是一个字母", groups = {AddGroup.class, UpdateGroup.class})
 	private String firstLetter;
 	/**
 	 * 排序

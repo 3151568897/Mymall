@@ -1,14 +1,12 @@
 package com.example.mymall.product.controller;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.example.common.valid.AddGroup;
 import com.example.common.valid.UpdateGroup;
+import com.example.common.valid.UpdateStatusGroup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.bind.BindResult;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,8 +18,6 @@ import com.example.mymall.product.entity.BrandEntity;
 import com.example.mymall.product.service.BrandService;
 import com.example.common.utils.PageUtils;
 import com.example.common.utils.R;
-
-import javax.validation.Valid;
 
 
 /**
@@ -73,7 +69,17 @@ public class BrandController {
      */
     @RequestMapping("/update")
     public R update(@Validated({UpdateGroup.class}) @RequestBody BrandEntity brand){
-		brandService.updateById(brand);
+		brandService.updateDetail(brand);
+
+        return R.ok();
+    }
+
+    /**
+     * 修改状态
+     */
+    @RequestMapping("/update/status")
+    public R updateStatus(@Validated({UpdateStatusGroup.class}) @RequestBody BrandEntity brand){
+        brandService.updateById(brand);
 
         return R.ok();
     }
