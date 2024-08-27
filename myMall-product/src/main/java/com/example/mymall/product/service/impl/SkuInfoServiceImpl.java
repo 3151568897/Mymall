@@ -123,11 +123,11 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
             });
         }
         String catalogId = (String) params.get("catelogId");
-        if(!StringUtils.isEmpty((catalogId)) && "0".equalsIgnoreCase(catalogId)){
+        if(!StringUtils.isEmpty((catalogId)) && !"0".equalsIgnoreCase(catalogId)){
             wrapper.eq("catalog_id", catalogId);
         }
         String brandId = (String) params.get("brandId");
-        if(!StringUtils.isEmpty((brandId)) && "0".equalsIgnoreCase(brandId)){
+        if(!StringUtils.isEmpty((brandId)) && !"0".equalsIgnoreCase(brandId)){
             wrapper.eq("brand_id", brandId);
         }
         String min = (String) params.get("min");
