@@ -2,8 +2,11 @@ package com.example.mymall.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.common.utils.PageUtils;
+import com.example.mymall.product.entity.AttrEntity;
 import com.example.mymall.product.entity.AttrGroupEntity;
+import com.example.mymall.product.vo.AttrGroupWithAttrsVO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,5 +25,9 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
      * 根据分类属性获取列表
      */
     PageUtils queryPage(Map<String, Object> params, Long catelogId);
+
+    void removeByIdsWithoutCascade(List<Long> list);
+
+    List<AttrGroupWithAttrsVO> getAttrGroupWithAttrsByCatelogId(Long catelogId);
 }
 

@@ -1,5 +1,6 @@
 package com.example.mymall.product.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -9,7 +10,7 @@ import lombok.Data;
 
 /**
  * 商品属性
- * 
+ *
  * @author wupeng
  * @email wupeng@gmail.com
  * @date 2024-08-09 18:21:35
@@ -56,5 +57,6 @@ public class AttrEntity implements Serializable {
 	 * 快速展示【是否展示在介绍上；0-否 1-是】，在sku中仍然可以调整
 	 */
 	private Integer showDesc;
+
 
 }

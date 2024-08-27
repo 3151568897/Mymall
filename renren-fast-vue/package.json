@@ -26,6 +26,7 @@
     "lodash": "4.17.5",
     "node-sass": "npm:sass@^1.77.8",
     "npm": "^6.9.0",
+    "pubsub-js": "^1.8.0",
     "sass-loader": "6.0.6",
     "snapdragon": "^0.8.1",
     "svg-sprite-loader": "3.7.3",

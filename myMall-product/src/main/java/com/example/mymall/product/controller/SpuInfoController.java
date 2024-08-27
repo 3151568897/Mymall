@@ -3,6 +3,7 @@ package com.example.mymall.product.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.example.mymall.product.vo.SpuInfoSaveVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,7 +36,7 @@ public class SpuInfoController {
      */
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = spuInfoService.queryPage(params);
+        PageUtils page = spuInfoService.queryPageByCondition(params);
 
         return R.ok().put("page", page);
     }
@@ -52,11 +53,11 @@ public class SpuInfoController {
     }
 
     /**
-     * 保存
+     * 新增商品
      */
     @RequestMapping("/save")
-    public R save(@RequestBody SpuInfoEntity spuInfo){
-		spuInfoService.save(spuInfo);
+    public R save(@RequestBody SpuInfoSaveVO spuInfoSaveVO){
+		spuInfoService.saveSpuInfo(spuInfoSaveVO);
 
         return R.ok();
     }

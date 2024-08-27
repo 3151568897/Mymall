@@ -3,7 +3,10 @@ package com.example.mymall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.common.utils.PageUtils;
 import com.example.mymall.product.entity.SkuInfoEntity;
+import com.example.mymall.product.entity.SpuInfoEntity;
+import com.example.mymall.product.vo.SkuVO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +19,9 @@ import java.util.Map;
 public interface SkuInfoService extends IService<SkuInfoEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void saveSkus(SpuInfoEntity spuInfoEntity, List<SkuVO> skus);
+
+    PageUtils queryPagebyCondition(Map<String, Object> params);
 }
 

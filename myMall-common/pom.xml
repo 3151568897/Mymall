@@ -86,7 +86,6 @@
             <version>${spring-boot.version}</version>
         </dependency>
 
-
     </dependencies>
 
     <dependencyManagement>

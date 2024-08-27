@@ -1,10 +1,17 @@
 package com.example.mymall.product.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.mymall.product.entity.BrandEntity;
+import com.example.mymall.product.service.BrandService;
+import com.example.mymall.product.service.CategoryService;
+import com.example.mymall.product.vo.BrandRelationVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,11 +49,28 @@ public class CategoryBrandRelationController {
      * 根据品牌查询列表
      */
     @GetMapping("/catelog/list")
-    public R listByBrandId(@RequestParam("brandId") Long brandId){
+    public R listByBrandId(@RequestParam(value = "brandId", required = true) Long brandId){
         List<CategoryBrandRelationEntity> categoryBrandRelationEntities = categoryBrandRelationService.getBaseMapper()
                 .selectList(new QueryWrapper<CategoryBrandRelationEntity>().eq("brand_id", brandId));
 
         return R.ok().put("data", categoryBrandRelationEntities);
+    }
+    /**
+     * 获取分类关联的品牌
+     */
+    @GetMapping("/brands/list")
+    public R listByCategoryId(@RequestParam(value = "catId", required = true) Long catId){
+        List<BrandEntity> brands = categoryBrandRelationService.getBrandsByCatId(catId);
+        List<BrandRelationVO> brandRelationVOList = new ArrayList<>();
+
+        for (BrandEntity brandEntity: brands) {
+            BrandRelationVO brandRelationVO = new BrandRelationVO();
+            brandRelationVO.setBrandId(brandEntity.getBrandId());
+            brandRelationVO.setBrandName(brandEntity.getName());
+            brandRelationVOList.add(brandRelationVO);
+        }
+
+        return R.ok().put("data", brandRelationVOList);
     }
 
 

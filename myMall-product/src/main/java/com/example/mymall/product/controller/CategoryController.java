@@ -54,13 +54,22 @@ public class CategoryController {
 
 
     /**
-     * 信息
+     * 获取分类树
      */
     @RequestMapping("/info/{catId}")
     public R info(@PathVariable("catId") Long catId){
 		CategoryEntity category = categoryService.getById(catId);
 
         return R.ok().put("data", category);
+    }
+    /**
+     * 获取分类path
+     */
+    @RequestMapping("/path/{catId}")
+    public R getCatelogPath(@PathVariable("catId") Long catId){
+        Long[] catelogPath = categoryService.findCatelogPath(catId);
+
+        return R.ok().put("data", catelogPath);
     }
 
     /**

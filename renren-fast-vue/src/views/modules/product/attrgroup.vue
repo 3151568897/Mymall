@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="20">
     <el-col :span="6">
-      <category @node-click="nodeClick"></category>
+      <category @tree-node-click="nodeClick"></category>
     </el-col>
     <el-col :span="18">
       <div class="mod-config">
@@ -70,6 +70,7 @@
             width="150"
             label="操作">
             <template slot-scope="scope">
+              <el-button type="text" size="small" @click="relationHandle(scope.row.attrGroupId)">关联</el-button>
               <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.attrGroupId)">修改</el-button>
               <el-button type="text" size="small" @click="deleteHandle(scope.row.attrGroupId)">删除</el-button>
             </template>
@@ -86,6 +87,8 @@
         </el-pagination>
         <!-- 弹窗, 新增 / 修改 -->
         <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+        <!-- 修改关联关系 -->
+        <relation-update v-if="relationVisible" ref="relationUpdate" @refreshData="getDataList"></relation-update>
       </div>
     </el-col>
   </el-row>
@@ -94,6 +97,7 @@
 <script>
 import Category from '../common/category.vue'
 import AddOrUpdate from './attrgroup-add-or-update'
+import RelationUpdate from "./attr-group-relation";
 export default {
   data () {
     return {
@@ -107,17 +111,26 @@ export default {
       totalPage: 0,
       dataListLoading: false,
       dataListSelections: [],
-      addOrUpdateVisible: false
+      addOrUpdateVisible: false,
+      relationVisible: false
     }
   },
   components: {
     AddOrUpdate,
-    Category
+    Category,
+    RelationUpdate
   },
   activated () {
     this.getDataList()
   },
   methods: {
+    // 处理分组与属性的关联
+    relationHandle (groupId) {
+      this.relationVisible = true
+      this.$nextTick(() => {
+        this.$refs.relationUpdate.init(groupId)
+      })
+    },
     // 节点被点击
     nodeClick (data, node, component) {
       if (node.level === 3) {

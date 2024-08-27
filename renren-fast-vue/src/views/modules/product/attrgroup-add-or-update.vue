@@ -96,6 +96,9 @@
               }
             })
           }
+          if (catelogId && catelogId !== 0 && this.dataForm.catelogPath.length === 0) {
+            this.getCatelogPath(catelogId)
+          }
         })
       },
       getMenus () {
@@ -140,6 +143,19 @@
                 this.$message.error(data.msg)
               }
             })
+          }
+        })
+      },
+      getCatelogPath (catelogId) {
+        // 查出catelogId的完整路径
+        this.$http({
+          url: this.$http.adornUrl(`/product/category/path/${catelogId}`),
+          method: 'get',
+          params: this.$http.adornParams()
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            // 查出catelogId的完整路径
+            this.dataForm.catelogPath = data.data
           }
         })
       }

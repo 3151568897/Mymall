@@ -23,7 +23,8 @@ public class mymallExceptionControllerAdvice {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public R handleVaildException(MethodArgumentNotValidException e){
-        log.error("数据校验出现异常{}, 异常类型:{}", e.getMessage(), e.getClass());
+        log.error("数据校验出现异常{}, 异常类型:{}", e.getMessage(), e.getClass(),e);
+        log.error(String.valueOf(e));
 
         BindingResult result = e.getBindingResult();
         Map<String, String> map = new HashMap<>();
@@ -39,6 +40,7 @@ public class mymallExceptionControllerAdvice {
     @ExceptionHandler(value = Throwable.class)
     public R handleException(Throwable e){
         log.error("出现异常{}, 异常类型:{}", e.getMessage(), e.getClass());
+        log.error(String.valueOf(e));
 
         return R.error(BaseCodeEnume.UNKNOW_EXCEPTION.getCode(), BaseCodeEnume.UNKNOW_EXCEPTION.getMsg());
     }

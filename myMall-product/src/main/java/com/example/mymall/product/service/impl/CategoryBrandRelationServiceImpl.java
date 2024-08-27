@@ -4,9 +4,15 @@ import com.example.mymall.product.dao.BrandDao;
 import com.example.mymall.product.dao.CategoryDao;
 import com.example.mymall.product.entity.BrandEntity;
 import com.example.mymall.product.entity.CategoryEntity;
+import com.example.mymall.product.vo.BrandRelationVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -65,6 +71,21 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
         category.setCatelogId(catId);
         category.setCatelogName(name);
         this.update(category,new QueryWrapper<CategoryBrandRelationEntity>().eq("catelog_id",catId));
+    }
+
+    @Override
+    public List<BrandEntity> getBrandsByCatId(Long catId) {
+        List<CategoryBrandRelationEntity> categoryBrandRelationEntities = this.getBaseMapper()
+                .selectList(new QueryWrapper<CategoryBrandRelationEntity>().eq("catelog_id", catId));
+        List<Long> brandIds = categoryBrandRelationEntities.stream().map(CategoryBrandRelationEntity::getBrandId).collect(Collectors.toList());
+        List<BrandEntity> brands = new ArrayList<>();
+        for (Long brandId: brandIds) {
+            //将brandid封装到brandRelationVO中
+            BrandEntity brandEntity = brandDao.selectById(brandId);
+            brands.add(brandEntity);
+        }
+
+        return brands;
     }
 
 }

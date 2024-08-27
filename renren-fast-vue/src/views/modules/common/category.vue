@@ -41,7 +41,7 @@ export default {
       })
     },
     nodeClick (data, node, component) {
-      this.$emit('node-click', data, node, component)
+      this.$emit('tree-node-click', data, node, component)
     }
   },
   created () {

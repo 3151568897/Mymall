@@ -34,19 +34,6 @@ import com.example.common.utils.R;
 public class MemberController {
     @Autowired
     private MemberService memberService;
-    @Autowired
-    private CouponFeignService couponFeignService;
-    @Value("${member.user.name}")
-    private String name;
-
-
-    @RequestMapping("/test")
-    public R test(){
-        Map<String, Object> map = new HashMap<>();
-        map.put("name",1);
-        map.put("age",1);
-        return R.ok(couponFeignService.list(map)+"\n sfsdafsdf+"+" name:"+name);
-    }
 
     /**
      * 列表

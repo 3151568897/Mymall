@@ -1,11 +1,10 @@
 <template>
   <div>
     <el-upload
-      action="http://gulimall.oss-cn-shanghai.aliyuncs.com"
-      :data="dataObj"
+      action=""
+      :http-request="upload"
       list-type="picture-card"
       :file-list="fileList"
-      :before-upload="beforeUpload"
       :on-remove="handleRemove"
       :on-success="handleUploadSuccess"
       :on-preview="handlePreview"
@@ -20,8 +19,6 @@
   </div>
 </template>
 <script>
-import { policy } from './policy'
-import { getUUID } from '@/utils'
 export default {
   name: 'multiUpload',
   props: {
@@ -35,24 +32,18 @@ export default {
   },
   data () {
     return {
-      dataObj: {
-        policy: '',
-        signature: '',
-        key: '',
-        ossaccessKeyId: '',
-        dir: '',
-        host: '',
-        uuid: ''
-      },
       dialogVisible: false,
-      dialogImageUrl: null
+      dialogImageUrl: null,
+      url: null
     }
   },
   computed: {
     fileList () {
       let fileList = []
       for (let i = 0; i < this.value.length; i++) {
-        fileList.push({ url: this.value[i] })
+        if (this.value[i] !== undefined && this.value[i] != null && this.value[i] !== '') {
+          fileList.push({ url: this.value[i] })
+        }
       }
 
       return fileList
@@ -60,6 +51,22 @@ export default {
   },
   mounted () {},
   methods: {
+    upload (param) {
+      const formData = new FormData()
+      formData.append('file', param.file)
+      this.$http({
+        url: this.$http.adornUrl('/thirdParty/file/upload'),
+        method: 'post',
+        data: formData
+      }).then(({data}) => {
+        if (data && data.code === 0) {
+          this.url = data.data
+          this.handleUploadSuccess(data, param.file)
+        } else {
+          this.$message.error(data.msg)
+        }
+      })
+    },
     emitInput (fileList) {
       let value = []
       for (let i = 0; i < fileList.length; i++) {
@@ -74,31 +81,13 @@ export default {
       this.dialogVisible = true
       this.dialogImageUrl = file.url
     },
-    beforeUpload (file) {
-      let _self = this
-      return new Promise((resolve, reject) => {
-        policy()
-          .then(response => {
-            console.log('这是什么${filename}')
-            _self.dataObj.policy = response.data.policy
-            _self.dataObj.signature = response.data.signature
-            _self.dataObj.ossaccessKeyId = response.data.accessid
-            _self.dataObj.key = response.data.dir + '/' + getUUID() + '_${filename}'
-            _self.dataObj.dir = response.data.dir
-            _self.dataObj.host = response.data.host
-            resolve(true)
-          })
-          .catch(err => {
-            console.log('出错了...', err)
-            reject(false)
-          })
-      })
-    },
     handleUploadSuccess (res, file) {
+      console.log('上传成功...')
       this.fileList.push({
         name: file.name,
         // url: this.dataObj.host + "/" + this.dataObj.dir + "/" + file.name； 替换${filename}为真正的文件名
-        url: this.dataObj.host + '/' + this.dataObj.key.replace('${filename}', file.name)
+        // eslint-disable-next-line no-template-curly-in-string
+        url: this.url
       })
       this.emitInput(this.fileList)
     },
