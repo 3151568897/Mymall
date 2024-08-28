@@ -6,8 +6,10 @@ import com.example.mymall.product.dao.AttrAttrgroupRelationDao;
 import com.example.mymall.product.dao.AttrGroupDao;
 import com.example.mymall.product.dao.CategoryDao;
 import com.example.mymall.product.entity.AttrAttrgroupRelationEntity;
+import com.example.mymall.product.entity.ProductAttrValueEntity;
 import com.example.mymall.product.service.AttrAttrgroupRelationService;
 import com.example.mymall.product.service.CategoryService;
+import com.example.mymall.product.service.ProductAttrValueService;
 import com.example.mymall.product.vo.AttrResponseVO;
 import com.example.mymall.product.vo.AttrVO;
 import org.apache.commons.lang.StringUtils;
@@ -45,6 +47,8 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
     private CategoryDao categoryDao;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private ProductAttrValueService productAttrValueService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -220,6 +224,13 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         Collection<AttrEntity> attrEntities = this.listByIds(attrIds);
 
         return (List<AttrEntity>) attrEntities;
+    }
+
+    @Override
+    public List<ProductAttrValueEntity> baseAttrListForSpu(Long spuId) {
+        List<ProductAttrValueEntity> baseAttrListForSpu = productAttrValueService.AttrListForSpu(spuId);
+
+        return baseAttrListForSpu;
     }
 
 }

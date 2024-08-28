@@ -1,20 +1,19 @@
 package com.example.mymall.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.mymall.product.entity.AttrAttrgroupRelationEntity;
+import com.example.mymall.product.entity.ProductAttrValueEntity;
 import com.example.mymall.product.service.AttrAttrgroupRelationService;
 import com.example.mymall.product.service.CategoryService;
+import com.example.mymall.product.service.ProductAttrValueService;
 import com.example.mymall.product.vo.AttrVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.mymall.product.entity.AttrEntity;
 import com.example.mymall.product.service.AttrService;
@@ -36,9 +35,7 @@ public class AttrController {
     @Autowired
     private AttrService attrService;
     @Autowired
-    private CategoryService categoryService;
-    @Autowired
-    private AttrAttrgroupRelationService attrAttrgroupRelationService;
+    private ProductAttrValueService productAttrValueService;
 
     /**
      * 列表
@@ -60,6 +57,28 @@ public class AttrController {
         PageUtils page = attrService.queryPage(params, catelogId, attrType);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     * /product/attr/base/listforspu/{spuId}
+     * 获取spu规格
+     */
+    @RequestMapping("/base/listforspu/{spuId}")
+    public R attrListForSpu(@PathVariable("spuId") Long spuId){
+        List<ProductAttrValueEntity> attrEntities = attrService.baseAttrListForSpu(spuId);
+
+        return R.ok().put("data", attrEntities);
+    }
+
+    /**
+     * /product/attr/update/{spuId}
+     * 修改商品规格
+     */
+    @PostMapping("/update/{spuId}")
+    public R updateSpuAttr(@RequestBody List<ProductAttrValueEntity> productAttr, @PathVariable("spuId") Long spuId){
+        productAttrValueService.updateSpuAttr(spuId, productAttr);
+
+        return R.ok();
     }
 
 
