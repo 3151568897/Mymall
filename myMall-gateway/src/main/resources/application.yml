@@ -9,10 +9,24 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
 
+        - id: coupon_route
+          uri: lb://myMall-coupon
+          predicates:
+            - Path=/api/coupon/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
         - id: member_route
           uri: lb://myMall-member
           predicates:
             - Path=/api/member/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: order_route
+          uri: lb://myMall-order
+          predicates:
+            - Path=/api/order/**
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
 
