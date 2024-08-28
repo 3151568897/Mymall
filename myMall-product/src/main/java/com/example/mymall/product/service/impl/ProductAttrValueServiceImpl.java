@@ -13,6 +13,7 @@ import com.example.common.utils.Query;
 import com.example.mymall.product.dao.ProductAttrValueDao;
 import com.example.mymall.product.entity.ProductAttrValueEntity;
 import com.example.mymall.product.service.ProductAttrValueService;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("productAttrValueService")
@@ -34,6 +35,7 @@ public class ProductAttrValueServiceImpl extends ServiceImpl<ProductAttrValueDao
         return this.list(new QueryWrapper<ProductAttrValueEntity>().eq("spu_id", spuId));
     }
 
+    @Transactional
     @Override
     public void updateSpuAttr(Long spuId, List<ProductAttrValueEntity> productAttr) {
         this.baseMapper.delete(new QueryWrapper<ProductAttrValueEntity>().eq("spu_id", spuId));
