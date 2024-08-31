@@ -1,21 +1,15 @@
-package com.example.mymall.product.controller;
+package com.example.mymall.product.app;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.mymall.product.entity.AttrAttrgroupRelationEntity;
 import com.example.mymall.product.entity.ProductAttrValueEntity;
-import com.example.mymall.product.service.AttrAttrgroupRelationService;
-import com.example.mymall.product.service.CategoryService;
 import com.example.mymall.product.service.ProductAttrValueService;
 import com.example.mymall.product.vo.AttrVO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.mymall.product.entity.AttrEntity;
 import com.example.mymall.product.service.AttrService;
 import com.example.common.utils.PageUtils;
 import com.example.common.utils.R;

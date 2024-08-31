@@ -2,6 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.13</version>
+        <relativePath/>
+    </parent>
     <groupId>com.example.mymall</groupId>
     <artifactId>myMall-product</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -20,6 +26,20 @@
             <artifactId>myMall-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+<!--        模板引擎 thymeleaf-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
+<!--        热部署静态资源-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
