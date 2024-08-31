@@ -35,5 +35,12 @@ public interface AttrService extends IService<AttrEntity> {
     List<AttrEntity> attrRelation(Long attrgroupId);
 
     List<ProductAttrValueEntity> baseAttrListForSpu(Long spuId);
+
+    /**
+     * 在attrid的list中获取可以被搜索的attrId的集合
+     * @param attrIds
+     * @return
+     */
+    List<Long> selectSearchAttrIds(List<Long> attrIds);
 }
 

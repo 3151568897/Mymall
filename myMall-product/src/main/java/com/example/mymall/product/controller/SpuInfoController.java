@@ -63,6 +63,17 @@ public class SpuInfoController {
     }
 
     /**
+     * /product/spuinfo/{spuId}/up
+     * 商品上架(要修改es的数据和商品状态)
+     */
+    @RequestMapping("/{spuId}/up")
+    public R up(@PathVariable("spuId") Long spuId){
+        spuInfoService.up(spuId);
+
+        return R.ok();
+    }
+
+    /**
      * 修改
      */
     @RequestMapping("/update")

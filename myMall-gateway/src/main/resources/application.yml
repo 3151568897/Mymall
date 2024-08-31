@@ -44,6 +44,13 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
 
+        - id: search_route
+          uri: lb://myMall-search
+          predicates:
+            - Path=/api/search/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
         - id: admin_route
           uri: lb://renren-fast
           predicates:

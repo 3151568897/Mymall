@@ -1,11 +1,16 @@
 package com.example.mymall.ware.service.impl;
 
+import com.example.common.to.SkuHasStockTO;
 import com.example.common.utils.R;
 import com.example.mymall.ware.feign.ProductFeignService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -73,6 +78,23 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
             one.setStock(one.getStock() + skuNum);
             this.updateById(one);
         }
+    }
+
+    @Override
+    public List<SkuHasStockTO> getSkuHasStock(List<Long> skuIds) {
+        List<SkuHasStockTO> collect = skuIds.stream().map(skuId -> {
+            SkuHasStockTO skuHasStockVO = new SkuHasStockTO();
+
+            //检查是否有库存 stockLocked代表被购买了多少
+            Long count = baseMapper.getSkuStock(skuId);
+
+            //保证count=null时 也可以返回数据
+            skuHasStockVO.setHasStock(count != null && count > 0);
+            skuHasStockVO.setSkuId(skuId);
+            return skuHasStockVO;
+        }).collect(Collectors.toList());
+
+        return collect;
     }
 
 }

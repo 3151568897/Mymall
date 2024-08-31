@@ -2,8 +2,6 @@ package com.example.mymall;
 
 
 import com.example.mymall.product.MyMallProductApplication;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

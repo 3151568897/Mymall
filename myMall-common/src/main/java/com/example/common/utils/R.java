@@ -8,7 +8,10 @@
 
 package com.example.common.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import org.apache.http.HttpStatus;
+import org.springframework.beans.PropertyValues;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +23,18 @@ import java.util.Map;
  */
 public class R extends HashMap<String, Object> {
     private static final long serialVersionUID = 1L;
+
+    public R setData(Object data) {
+        put("data", data);
+        return this;
+    }
+
+    //利用fastjson进行逆转
+    public <T> T getData(TypeReference<T> typeReference) {
+        Object data = get("data");
+        String jsonString = JSON.toJSONString(data);
+        return JSON.parseObject(jsonString, typeReference);
+    }
 
     public R() {
         put("code", 0);

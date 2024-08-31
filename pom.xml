@@ -21,6 +21,7 @@
 
 
     <modules>
+        <module>myMall-third-party</module>
         <module>myMall-common</module>
         <module>myMall-gateway</module>
         <module>myMall-product</module>
@@ -28,6 +29,7 @@
         <module>myMall-member</module>
         <module>myMall-order</module>
         <module>myMall-ware</module>
+        <module>myMall-search</module>
         <module>renren-fast</module>
         <module>renren-generator</module>
     </modules>
