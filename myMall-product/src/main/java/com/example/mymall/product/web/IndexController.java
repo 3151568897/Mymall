@@ -32,7 +32,7 @@ public class IndexController {
     //index/json/catalog.json
     @ResponseBody
     @GetMapping("/index/catalog.json")
-    public Map<String, List<Catalog2VO>> getCatalogJson(){
+    public Map<String, List<Catalog2VO>> getCatalogJson() throws InterruptedException {
         Map<String, List<Catalog2VO>> map = categoryService.getCatalogJson();
 
         return map;

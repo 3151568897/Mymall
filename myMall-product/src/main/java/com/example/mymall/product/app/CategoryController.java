@@ -58,7 +58,7 @@ public class CategoryController {
      */
     @RequestMapping("/info/{catId}")
     public R info(@PathVariable("catId") Long catId){
-		CategoryEntity category = categoryService.getById(catId);
+		CategoryEntity category = categoryService.getByCatId(catId);
 
         return R.ok().put("data", category);
     }

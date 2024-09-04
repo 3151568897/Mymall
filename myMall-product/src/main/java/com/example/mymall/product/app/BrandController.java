@@ -1,6 +1,8 @@
 package com.example.mymall.product.app;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import com.example.common.valid.AddGroup;
@@ -8,11 +10,7 @@ import com.example.common.valid.UpdateGroup;
 import com.example.common.valid.UpdateStatusGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.mymall.product.entity.BrandEntity;
 import com.example.mymall.product.service.BrandService;
@@ -52,6 +50,16 @@ public class BrandController {
 		BrandEntity brand = brandService.getById(brandId);
 
         return R.ok().put("brand", brand);
+    }
+
+    /**
+     * 根据品牌ids 获取品牌
+     */
+    @GetMapping("/infos")
+    public R infos(@RequestParam("brandIds") List<Long> brandIds){
+        Collection<BrandEntity> byIds = brandService.getBrandsByIds(brandIds);
+
+        return R.ok().put("data", byIds);
     }
 
     /**

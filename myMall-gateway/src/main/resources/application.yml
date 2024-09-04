@@ -58,6 +58,11 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
 
+        - id: mymall_search_route
+          uri: lb://myMall-search
+          predicates:
+            - Host=search.mymall.com
+
         - id: mymall_host_route
           uri: lb://myMall-product
           predicates:

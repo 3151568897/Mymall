@@ -12,6 +12,15 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
   thymeleaf:
     cache: false
+  redis:
+    host: 192.168.10.131
+    port: 6379
+    password: 123456
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+      cache-null-values: true
 
 
 mybatis-plus:
@@ -26,6 +35,8 @@ server:
 logging:
   level:
     com.example.mymall.product: debug
+
+
 
 
 

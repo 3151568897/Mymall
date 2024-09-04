@@ -83,7 +83,6 @@ public class AttrController {
     public R info(@PathVariable("attrId") Long attrId){
 		AttrVO attrVO = attrService.getInfo(attrId);
 
-
         return R.ok().put("attr", attrVO);
     }
 
