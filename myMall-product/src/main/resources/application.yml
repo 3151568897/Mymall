@@ -36,6 +36,11 @@ logging:
   level:
     com.example.mymall.product: debug
 
+mymall:
+  thread:
+    core-pool-size: 20
+    max-pool-size: 200
+    keep-alive-time: 10
 
 
 

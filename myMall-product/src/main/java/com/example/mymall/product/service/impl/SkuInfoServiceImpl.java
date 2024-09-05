@@ -1,13 +1,17 @@
 package com.example.mymall.product.service.impl;
 
+import com.alibaba.fastjson.TypeReference;
+import com.example.common.to.SkuHasStockTO;
 import com.example.common.to.SkuReductionTO;
 import com.example.common.utils.R;
+import com.example.mymall.product.config.MyThreadConfig;
 import com.example.mymall.product.entity.*;
 import com.example.mymall.product.feign.CouponFeignService;
-import com.example.mymall.product.service.AttrService;
-import com.example.mymall.product.service.SkuImagesService;
-import com.example.mymall.product.service.SkuSaleAttrValueService;
+import com.example.mymall.product.feign.WareFeignService;
+import com.example.mymall.product.service.*;
+import com.example.mymall.product.vo.ItemSaleAttrsVO;
 import com.example.mymall.product.vo.SkuImagesVO;
+import com.example.mymall.product.vo.SkuItemVO;
 import com.example.mymall.product.vo.SkuVO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -15,8 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -26,7 +31,6 @@ import com.example.common.utils.PageUtils;
 import com.example.common.utils.Query;
 
 import com.example.mymall.product.dao.SkuInfoDao;
-import com.example.mymall.product.service.SkuInfoService;
 
 
 @Service("skuInfoService")
@@ -38,6 +42,14 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
     private SkuSaleAttrValueService skuSaleAttrValueService;
     @Autowired
     private CouponFeignService couponFeignService;
+    @Autowired
+    private SpuInfoDescService spuInfoDescService;
+    @Autowired
+    private AttrGroupService attrGroupService;
+    @Autowired
+    private WareFeignService wareFeignService;
+    @Autowired
+    private ThreadPoolExecutor executor;
 
 
     @Override
@@ -158,5 +170,100 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
     public List<SkuInfoEntity> getSkusBySpuId(Long spuId) {
         return list(new QueryWrapper<SkuInfoEntity>().eq("spu_id", spuId));
     }
+
+    @Override
+    public SkuItemVO item(Long skuId) {
+        SkuItemVO skuItemVO = new SkuItemVO();
+
+        CompletableFuture<SkuInfoEntity> future = CompletableFuture.supplyAsync(() -> {
+            //1.sku基本信息获取 pms_sku_info
+            SkuInfoEntity skuInfoEntity = this.getById(skuId);
+            skuItemVO.setInfo(skuInfoEntity);
+            return skuInfoEntity;
+        }, executor);
+
+        CompletableFuture<Void> saleAttrFuture = future.thenAcceptAsync(skuInfoEntity -> {
+            Long spuId = skuInfoEntity.getSpuId();
+            //3.查询当前spu的销售属性组合
+            List<ItemSaleAttrsVO> saleAttrs = this.getSaleAttrsBySpuId(spuId);
+            skuItemVO.setSaleAttr(saleAttrs);
+        }, executor);
+
+        CompletableFuture<Void> despFuture = future.thenAcceptAsync(skuInfoEntity -> {
+            Long spuId = skuInfoEntity.getSpuId();
+            //4.查询当前spu的描述信息 pms_spu_info_desc
+            SpuInfoDescEntity spuInfoDesc = spuInfoDescService.getOne(new QueryWrapper<SpuInfoDescEntity>().eq("spu_id", spuId));
+            skuItemVO.setDesp(spuInfoDesc);
+        }, executor);
+
+        CompletableFuture<Void> groupAttrFuture = future.thenAcceptAsync(skuInfoEntity -> {
+            Long spuId = skuInfoEntity.getSpuId();
+            Long catalogId = skuInfoEntity.getCatalogId();
+            //5.获取spu的规格参数信息
+            List<SkuItemVO.SpuItemAttrGroupVO> groupAttrs = attrGroupService.getAttrGroupWithAttrsBySpuId(spuId, catalogId);
+            skuItemVO.setGroupAttrs(groupAttrs);
+        }, executor);
+
+        //2.sku的图片信息 pms_sku_images
+        CompletableFuture<Void> imagesFuture = CompletableFuture.runAsync(() -> {
+            List<SkuImagesEntity> images = skuImagesService.list(new QueryWrapper<SkuImagesEntity>().eq("sku_id", skuId));
+            skuItemVO.setImages(images);
+        }, executor);
+
+        //6.是否有货
+        CompletableFuture<Void> hasStockFuture = CompletableFuture.runAsync(() -> {
+            R r = wareFeignService.getSkuHasStock(Collections.singletonList(skuId));
+            if (r.getCode() == 0) {
+                TypeReference<List<SkuHasStockTO>> typeReference = new TypeReference<>() {
+                };
+                List<SkuHasStockTO> hasSkuStock = r.getData(typeReference);
+                skuItemVO.setHasStock(hasSkuStock.size() > 0);
+            }
+        }, executor);
+
+        //等待所有任务完成
+        CompletableFuture.allOf(groupAttrFuture, despFuture, saleAttrFuture, imagesFuture, hasStockFuture).join();
+
+        return skuItemVO;
+    }
+
+    @Override
+    public List<ItemSaleAttrsVO> getSaleAttrsBySpuId(Long spuId) {
+        return baseMapper.getSaleAttrsBySpuId(spuId);
+    }
+
+//    @Override
+//    public List<ItemSaleAttrsVO> getSaleAttrsBySpuId(Long spuId) {
+//        List<SkuItemVO.ItemSaleAttrsVO> saleAttrs = new ArrayList<>();
+//        //1.获取skuId
+//        List<Long> skuIds = getSkusBySpuId(spuId).stream()
+//                .map(SkuInfoEntity::getSkuId)
+//                .collect(Collectors.toList());
+//        //2.获取销售属性
+//        List<SkuSaleAttrValueEntity> skuAttrValues = skuSaleAttrValueService.list(new QueryWrapper<SkuSaleAttrValueEntity>().in("sku_id", skuIds));
+//        //3.attrIdSet 用于去重
+//        HashSet<Long> attrIdSet = new HashSet<>();
+//
+//        for (SkuSaleAttrValueEntity skuSaleAttr : skuAttrValues) {
+//            Long attrId = skuSaleAttr.getAttrId();
+//            if(!attrIdSet.contains(attrId)){
+//                SkuItemVO.ItemSaleAttrsVO itemSaleAttrsVO = new SkuItemVO.ItemSaleAttrsVO();
+//                itemSaleAttrsVO.setAttrId(attrId);
+//                itemSaleAttrsVO.setAttrName(skuSaleAttr.getAttrName());
+//                //属性值
+//                List<String> attrValue = skuAttrValues.stream()
+//                        .filter(item -> item.getAttrId().equals(attrId))
+//                        .map(SkuSaleAttrValueEntity::getAttrValue)
+//                        .distinct()
+//                        .collect(Collectors.toList());
+//
+//                itemSaleAttrsVO.setAttrValues(attrValue);
+//                saleAttrs.add(itemSaleAttrsVO);
+//                attrIdSet.add(attrId);
+//            }
+//        }
+//
+//        return saleAttrs;
+//    }
 
 }

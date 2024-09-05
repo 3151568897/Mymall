@@ -1,6 +1,13 @@
 spring:
   cloud:
     gateway:
+      httpclient:
+        connect-timeout: 10000  # 10秒的连接超时
+        response-timeout: 5000  # 响应超时设置
+        pool:
+          max-connections: 1000  # 增加最大连接数
+          acquire-timeout: 60000  # 获取连接超时时间
+
       routes:
         - id: product_route
           uri: lb://myMall-product
@@ -63,10 +70,15 @@ spring:
           predicates:
             - Host=search.mymall.com
 
+        - id: mymall_auth_route
+          uri: lb://myMall-auth-server
+          predicates:
+            - Host=auth.mymall.com
+
         - id: mymall_host_route
           uri: lb://myMall-product
           predicates:
-            - Host=**.mymall.com, mymall.com
+            - Host=item.mymall.com, mymall.com
 
 
 

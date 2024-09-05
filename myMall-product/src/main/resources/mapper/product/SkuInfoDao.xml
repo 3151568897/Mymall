@@ -18,5 +18,25 @@
         <result property="saleCount" column="sale_count"/>
     </resultMap>
 
+    <resultMap id="itemSaleAttrs" type="com.example.mymall.product.vo.ItemSaleAttrsVO">
+        <result property="attrId" column="attr_id"/>
+        <result property="attrName" column="attr_name"/>
+        <collection property="attrValues" ofType="com.example.mymall.product.vo.AttrValueWithSkuIdVO">
+            <result property="attrValue" column="attr_value"/>
+            <result property="skuIds" column="sku_ids"/>
+        </collection>
+    </resultMap>
+
+    <select id="getSaleAttrsBySpuId" resultMap="itemSaleAttrs">
+        select GROUP_CONCAT(info.sku_id) sku_ids,
+               ssav.attr_id,
+               ssav.attr_name,
+               ssav.attr_value
+        from pms_sku_info info
+                 left join pms_sku_sale_attr_value ssav on ssav.sku_id = info.sku_id
+        where info.spu_id=#{spuId}
+        GROUP BY ssav.attr_id,ssav.attr_name,ssav.attr_value
+    </select>
+
 
 </mapper>

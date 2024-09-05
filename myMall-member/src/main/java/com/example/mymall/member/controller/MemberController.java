@@ -4,15 +4,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.example.common.exception.LoginException;
 import com.example.mymall.member.feign.CouponFeignService;
+import com.example.mymall.member.vo.UserLoginVO;
+import com.example.mymall.member.vo.UserRegisterVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.mymall.member.entity.MemberEntity;
 import com.example.mymall.member.service.MemberService;
@@ -43,6 +42,27 @@ public class MemberController {
         PageUtils page = memberService.queryPage(params);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     * 注册功能
+     */
+    @PostMapping("/register")
+    public R register(@RequestBody UserRegisterVO vo) {
+        memberService.register(vo);
+        return R.ok();
+    }
+    /**
+     * 登录功能
+     */
+    @PostMapping("/login")
+    public R login(@RequestBody UserLoginVO vo) {
+        MemberEntity member = memberService.login(vo);
+        if(member != null) {
+            return R.ok().put("data", member);
+        } else {
+            throw new LoginException("用户名或密码错误");
+        }
     }
 
 

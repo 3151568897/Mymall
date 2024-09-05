@@ -2,9 +2,9 @@ package com.example.mymall.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.common.utils.PageUtils;
-import com.example.mymall.product.entity.AttrEntity;
 import com.example.mymall.product.entity.AttrGroupEntity;
 import com.example.mymall.product.vo.AttrGroupWithAttrsVO;
+import com.example.mymall.product.vo.SkuItemVO;
 
 import java.util.List;
 import java.util.Map;
@@ -29,5 +29,7 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
     void removeByIdsWithoutCascade(List<Long> list);
 
     List<AttrGroupWithAttrsVO> getAttrGroupWithAttrsByCatelogId(Long catelogId);
+
+    List<SkuItemVO.SpuItemAttrGroupVO> getAttrGroupWithAttrsBySpuId(Long spuId, Long catalogId);
 }
 
