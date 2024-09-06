@@ -68,6 +68,9 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         memberEntity.setCreateTime(new Date());
         memberEntity.setGrowth(0);
         memberEntity.setIntegration(0);
+        //1.2设置默认头像
+        //1.3设置默认昵称
+        memberEntity.setNickname("默认用户");
 
         //添加到数据库
         baseMapper.insert(memberEntity);
