@@ -7,6 +7,7 @@ import com.example.common.utils.PageUtils;
 import com.example.mymall.member.entity.MemberEntity;
 import com.example.mymall.member.vo.UserLoginVO;
 import com.example.mymall.member.vo.UserRegisterVO;
+import com.example.mymall.member.vo.WeiboSocialUserVO;
 
 import java.util.Map;
 
@@ -30,5 +31,7 @@ public interface MemberService extends IService<MemberEntity> {
     void checkEmailUnique(String email);
 
     MemberEntity login(UserLoginVO vo);
+
+    MemberEntity weiboLogin(WeiboSocialUserVO vo) throws Exception;
 }
 

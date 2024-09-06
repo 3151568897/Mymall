@@ -8,6 +8,7 @@ import com.example.common.exception.LoginException;
 import com.example.mymall.member.feign.CouponFeignService;
 import com.example.mymall.member.vo.UserLoginVO;
 import com.example.mymall.member.vo.UserRegisterVO;
+import com.example.mymall.member.vo.WeiboSocialUserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -62,6 +63,18 @@ public class MemberController {
             return R.ok().put("data", member);
         } else {
             throw new LoginException("用户名或密码错误");
+        }
+    }
+    /**
+     * 微博社交登录功能
+     */
+    @PostMapping("/oauth2/weibo/login")
+    public R weiboLogin(@RequestBody WeiboSocialUserVO vo) throws Exception {
+        MemberEntity member = memberService.weiboLogin(vo);
+        if(member != null) {
+            return R.ok().put("data", member);
+        } else {
+            throw new LoginException("微博社交登录错误");
         }
     }
 

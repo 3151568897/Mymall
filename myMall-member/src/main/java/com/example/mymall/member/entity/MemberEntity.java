@@ -9,7 +9,7 @@ import lombok.Data;
 
 /**
  * 会员
- * 
+ *
  * @author wupeng
  * @email wupeng@gmail.com
  * @date 2024-08-10 16:02:18
@@ -92,5 +92,11 @@ public class MemberEntity implements Serializable {
 	 * 注册时间
 	 */
 	private Date createTime;
+	/**
+	 * 微博社交登录的字段
+	 */
+	private String weiboUid;
+	private Long weiboExpiresIn;
+	private String weiboAccessToken;
 
 }

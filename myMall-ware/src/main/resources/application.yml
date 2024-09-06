@@ -24,6 +24,8 @@ spring:
 
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+  thymeleaf:
+    cache: false
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
   global-config:
@@ -36,4 +38,5 @@ server:
 logging:
   level:
     com.example: debug
+
 

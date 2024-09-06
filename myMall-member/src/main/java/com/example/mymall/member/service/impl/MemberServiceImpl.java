@@ -1,16 +1,24 @@
 package com.example.mymall.member.service.impl;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+import com.example.common.exception.LoginException;
 import com.example.common.exception.PhoneExistException;
 import com.example.common.exception.UsernameExistException;
+import com.example.common.utils.HttpUtils;
 import com.example.mymall.member.entity.MemberLevelEntity;
 import com.example.mymall.member.service.MemberLevelService;
 import com.example.mymall.member.vo.UserLoginVO;
 import com.example.mymall.member.vo.UserRegisterVO;
+import com.example.mymall.member.vo.WeiboSocialUserVO;
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -56,7 +64,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         MemberLevelEntity defaultStatus = memberLevelService.getOne(new QueryWrapper<MemberLevelEntity>().eq("default_status", 1));
         memberEntity.setLevelId(defaultStatus.getId());
 
-        memberEntity.setStatus(0);
+        memberEntity.setStatus(1);
         memberEntity.setCreateTime(new Date());
         memberEntity.setGrowth(0);
         memberEntity.setIntegration(0);
@@ -106,6 +114,67 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         }else {
             return null;
         }
+    }
+
+    @Override
+    public MemberEntity weiboLogin(WeiboSocialUserVO vo) throws Exception {
+        //登录注册合并逻辑
+        //1.如果用户是第一次登录 那就自动注册(生成会员信息) 根据uid
+        String uid = vo.getUid();
+        MemberEntity member = baseMapper.selectOne(new QueryWrapper<MemberEntity>().eq("weibo_uid", uid));
+        if(member != null){
+            //2.如果用户不是第一次登录 那就直接登录
+            //2.1 更新凭证
+            member.setWeiboAccessToken(vo.getAccess_token());
+            member.setWeiboExpiresIn(vo.getExpires_in());
+            saveOrUpdate(member);
+            //3.返回用户信息
+            return member;
+        }
+        //2.自动注册
+        MemberEntity memberEntity = new MemberEntity();
+        //2.1设置社交登录信息
+        memberEntity.setWeiboUid(uid);
+        memberEntity.setWeiboAccessToken(vo.getAccess_token());
+        memberEntity.setWeiboExpiresIn(vo.getExpires_in());
+        memberEntity.setCreateTime(new Date());
+        //2.2从微博获取用户基本信息
+        HashMap<String, String> map = new HashMap<>();
+        map.put("access_token", vo.getAccess_token());
+        map.put("uid", vo.getUid());
+        try{
+            HttpResponse response = HttpUtils.doGet("https://api.weibo.com",
+                    "/2/users/show.json",
+                    "get",
+                    new HashMap<>(),
+                    map);
+            if (response.getStatusLine().getStatusCode() != 200) {
+                throw new LoginException("获取用户微博信息失败");
+            }
+            String json = EntityUtils.toString(response.getEntity());
+            JSONObject jsonObject = JSON.parseObject(json);
+            //获取用户数据
+            memberEntity.setNickname(jsonObject.getString("name"));
+            memberEntity.setGender("m".equals(jsonObject.getString("gender")) ? 1 : 0);
+            memberEntity.setHeader(jsonObject.getString("profile_image_url"));
+            memberEntity.setCity(jsonObject.getString("location"));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new LoginException("获取用户微博信息失败");
+        }
+        //2.3设置默认等级
+        MemberLevelEntity defaultStatus = memberLevelService.getOne(new QueryWrapper<MemberLevelEntity>().eq("default_status", 1));
+        memberEntity.setLevelId(defaultStatus.getId());
+        //2.4设置默认状态
+        memberEntity.setStatus(0);
+        memberEntity.setGrowth(0);
+        memberEntity.setIntegration(0);
+
+        //添加到数据库
+        baseMapper.insert(memberEntity);
+
+        //3.返回用户信息
+        return memberEntity;
     }
 
 }
