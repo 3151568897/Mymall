@@ -1,4 +1,4 @@
-package com.example.mymall.ware.config;
+package com.example.mymall.product.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +14,7 @@ public class MymallSessionConfig {
     public CookieSerializer cookieSerializer() {
         DefaultCookieSerializer serializer = new DefaultCookieSerializer();
 
-        serializer.setDomainName("mymall.com");
+        serializer.setDomainName(".mymall.com");
         serializer.setCookieName("MALLSESSION");
 
         return serializer;

@@ -21,6 +21,8 @@ spring:
     redis:
       time-to-live: 3600000
       cache-null-values: true
+  session:
+    store-type: redis
 
 
 mybatis-plus:
