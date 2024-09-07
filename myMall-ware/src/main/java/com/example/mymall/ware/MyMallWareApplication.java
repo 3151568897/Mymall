@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @MapperScan("com.example.mymall.ware.dao")
 @EnableTransactionManagement
 @EnableFeignClients(basePackages = "com.example.mymall.ware.feign")
-@EnableRedisHttpSession //整合redis作为session
+@EnableRedisHttpSession
 public class MyMallWareApplication {
 
     public static void main(String[] args) {

@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient("mymall-coupon")
+@FeignClient("myMall-coupon")
 public interface CouponFeignService {
 
     @PostMapping("/coupon/spubounds/save")

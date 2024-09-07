@@ -14,7 +14,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @EnableFeignClients(basePackages = "com.example.mymall.product.feign")
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableRedisHttpSession //整合redis作为session
+@EnableRedisHttpSession
 public class MyMallProductApplication {
 
     public static void main(String[] args) {

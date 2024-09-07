@@ -4,6 +4,7 @@ spring:
     password: root
     url: jdbc:mysql://192.168.10.131:3306/mymall_oms?serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   cloud:
     nacos:
       serverAddr: 127.0.0.1:8848
@@ -14,15 +15,31 @@ spring:
         group: dev
       discovery:
         server-addr: 127.0.0.1:8848
+
   config:
     import:
       - nacos:mymall-order.properties?refreshEnabled=true
   application:
     name: myMall-order
+  redis:
+    host: 192.168.10.131
+    port: 6379
+    password: 123456
+  session:
+    store-type: redis
+    redis:
+      flush-mode: on_save
+
+  rabbitmq:
+    host: 192.168.10.131
+    port: 5672
+    virtual-host: /
+
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
   global-config:
     db-config:
       id-type: auto
+
 server:
   port: 9000

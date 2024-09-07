@@ -15,7 +15,7 @@
 			<!--品牌官方网站-->
 					<div class="min">
 						<ul class="header_ul_left">
-							<li class="glyphicon glyphicon-home"> <a href="/static/item/shouye.html" class="aa">京东首页</a></li>
+							<li class="glyphicon glyphicon-home"> <a href="http://mymall.com" class="aa">首页</a></li>
 							<li class="glyphicon glyphicon-map-marker"> <a href="/static/item/javascript:;">北京</a>
 								<ol id="beijing">
 									<li style="background: red;"><a href="/static/item/javascript:;" style="color: white;">北京</a></li>
@@ -257,9 +257,9 @@
 				<nav>
 				<div class="nav_min">
 					<div class="nav_top">
-						<div class="nav_top_one"><a href="/static/item/#"><img src="/static/item/img/111.png"/></a></div>
-						<div class="nav_top_two"><input type="text"/><button>搜索</button></div>
-						<div class="nav_top_three"><a href="/static/item/../JD_Shop/One_JDshop.html">我的购物车</a><span class="glyphicon glyphicon-shopping-cart"></span>
+						<div class="nav_top_one"><a href="http://mymall.com"><img src="/static/item/img/111.png"/></a></div>
+						<div class="nav_top_two"><input type="searchText"/><button onclick="search()">搜索</button></div>
+						<div class="nav_top_three"><a href="http://cart.mymall.com">我的购物车</a><span class="glyphicon glyphicon-shopping-cart"></span>
 							<div class="nav_top_three_1">
 								<img src="/static/item/img/44.png"/>购物车还没有商品，赶紧选购吧！
 							</div>
@@ -613,7 +613,7 @@
 
 						<div class="box-btns clear">
 							<div class="box-btns-one">
-								<input type="text" name="" id="" value="1" />
+								<input type="text" name="" id="numInput" value="1" />
 								<div class="box-btns-one1">
 
 									<div>
@@ -630,8 +630,8 @@
 								</div>
 							</div>
 							<div class="box-btns-two">
-								<a href="/static/item/../商品分类\index.html">
-									立即预约
+								<a id="addToCartA" href="" th:attr="skuId=${item.info.skuId}">
+									加入购物车
 								</a>
 							</div>
 							<div class="box-btns-three">
@@ -1223,6 +1223,20 @@
 				}
 			}, 0);
 		});
+
+		$("#addToCartA").click(function (){
+			event.preventDefault();  // 阻止默认的<a>标签跳转行为
+			//获取商品id和商品数量
+			var num = $("#numInput").val();
+			var skuId = $(this).attr("skuId");
+			window.location.href = "http://cart.mymall.com/addToCart?skuId=" + skuId + "&num=" + num;
+		})
+
+		function search() {
+			event.preventDefault();
+			var keyword=$("#searchText").val()
+			window.location.href="http://search.mymall.com/list.html?keyword="+keyword;
+		}
 
 		// $(function (){
 		// 	$("a[class='sku_attr_value checked']").css({"border":"1px solid red"})

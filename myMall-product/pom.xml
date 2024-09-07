@@ -33,12 +33,12 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
-<!--        热部署静态资源-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
-        </dependency>
+<!--&lt;!&ndash;        热部署静态资源&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-devtools</artifactId>-->
+<!--            <optional>false</optional>-->
+<!--        </dependency>-->
         <!--        整合SpringSession完成session共享问题-->
         <dependency>
             <groupId>org.springframework.session</groupId>
