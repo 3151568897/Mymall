@@ -34,6 +34,13 @@ spring:
     host: 192.168.10.131
     port: 5672
     virtual-host: /
+    publisher-confirm-type: correlated #开启发送端确认
+    publisher-returns: true   #开启发送端消息抵达队列的确认
+    template:
+      mandatory: true #只要抵达队列,异步发送优先回调returns的函数
+    listener:
+      simple:
+        acknowledge-mode: manual #只有接收端手动确认才销毁数据
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml

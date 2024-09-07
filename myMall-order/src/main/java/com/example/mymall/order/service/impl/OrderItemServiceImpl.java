@@ -1,5 +1,8 @@
 package com.example.mymall.order.service.impl;
 
+import com.rabbitmq.client.Channel;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -24,6 +27,17 @@ public class OrderItemServiceImpl extends ServiceImpl<OrderItemDao, OrderItemEnt
         );
 
         return new PageUtils(page);
+    }
+
+    @RabbitListener(queues = {"hello-java-queue"})
+    public void recieveMessage(Message message, OrderItemEntity orderItem, Channel channel){
+        System.out.println("接收到消息:"+orderItem);
+
+        try{
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 }
