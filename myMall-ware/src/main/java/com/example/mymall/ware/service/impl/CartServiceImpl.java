@@ -14,6 +14,7 @@ import com.example.mymall.ware.vo.UserInfoTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
@@ -198,5 +199,46 @@ public class CartServiceImpl implements CartService {
     public void deleteItem(Long skuId) {
         BoundHashOperations<String, Object, Object> cartOps = getCartOps();
         cartOps.delete(skuId.toString());
+    }
+
+    @Override
+    public List<CartItemVO> getCartItems() {
+        UserInfoTO userInfoTO = CartInterceptor.threadLocal.get();
+        if(userInfoTO.getUserId() == null) {
+            return null;
+        }
+        String cartKey = CART_RREFIX + userInfoTO.getUserId();
+
+        return getCartItems(cartKey);
+    }
+
+    @Override
+    public void allCheck(boolean check) {
+        UserInfoTO userInfo = CartInterceptor.threadLocal.get();
+        String cartKey = CART_RREFIX + userInfo.getUserId();
+        if(userInfo.getUserId()== null) {
+            cartKey = CART_RREFIX + userInfo.getUserKey();
+        }
+        List<CartItemVO> cartItems = getCartItems(cartKey);
+        for (CartItemVO cartItem : cartItems) {
+            cartItem.setCheck(check);
+            String jsonString = JSON.toJSONString(cartItem);
+            //重新保存
+            BoundHashOperations<String, Object, Object> cartOps = getCartOps();
+            cartOps.put(cartItem.getSkuId().toString(), jsonString);
+        }
+    }
+
+    @Override
+    public List<CartItemVO> getCheckedCartItems() {
+        UserInfoTO userInfoTO = CartInterceptor.threadLocal.get();
+        if(userInfoTO.getUserId() == null) {
+            return null;
+        }
+        String cartKey = CART_RREFIX + userInfoTO.getUserId();
+        List<CartItemVO> cartItems = getCartItems(cartKey);
+
+        List<CartItemVO> checkedCartItems = cartItems.stream().filter(cartItem -> cartItem.getCheck()).collect(Collectors.toList());
+        return checkedCartItems;
     }
 }

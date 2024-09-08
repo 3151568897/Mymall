@@ -11,7 +11,6 @@ package com.example.common.utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import org.apache.http.HttpStatus;
-import org.springframework.beans.PropertyValues;
 
 import java.util.HashMap;
 import java.util.Map;

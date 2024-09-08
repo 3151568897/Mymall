@@ -22,4 +22,3 @@ mybatis-plus:
       logic-not-delete-value: 0
 server:
   port: 30000
-

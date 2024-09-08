@@ -3,6 +3,8 @@ package com.example.mymall.ware.service;
 import com.example.mymall.ware.vo.CartItemVO;
 import com.example.mymall.ware.vo.CartVO;
 
+import java.util.List;
+
 public interface CartService {
     /**
      * 添加商品到购物车
@@ -42,4 +44,18 @@ public interface CartService {
      * @param skuId
      */
     void deleteItem(Long skuId);
+
+    /**
+     * 获取登录用户的所有购物车
+     * @return
+     */
+    List<CartItemVO> getCartItems();
+
+    void allCheck(boolean check);
+
+    /**
+     * 获取登录用户的所有被选中的购物车
+     * @return
+     */
+    List<CartItemVO> getCheckedCartItems();
 }

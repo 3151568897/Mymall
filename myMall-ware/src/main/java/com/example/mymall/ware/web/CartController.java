@@ -10,16 +10,43 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class CartController {
 
     @Autowired
     CartService cartService;
+
+    @GetMapping("/allCheck")
+    public String allCheck(@RequestParam("check") boolean check){
+        //重定向到成功页,再次查询购物车就行了
+        cartService.allCheck(check);
+
+        return "redirect:http://cart.mymall.com/cart.html";
+    }
+
+    @GetMapping("/currentUserCartItems")
+    @ResponseBody
+    public List<CartItemVO> currentUserCartItems() {
+        List<CartItemVO> cartItemVOS = cartService.getCartItems();
+
+        return cartItemVOS;
+    }
+
+    @GetMapping("/currentUserCheckedCartItems")
+    @ResponseBody
+    public List<CartItemVO> currentUserCheckedCartItems() {
+        List<CartItemVO> cartItemVOS = cartService.getCheckedCartItems();
+
+        return cartItemVOS;
+    }
 
     /**
      * 浏览器有一个cookid:user-key 来标识临时用户的身份

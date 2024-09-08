@@ -41,12 +41,64 @@ spring:
     listener:
       simple:
         acknowledge-mode: manual #只有接收端手动确认才销毁数据
+  thymeleaf:
+    cache: false
 
 mybatis-plus:
-  mapper-locations: classpath:/mapper/**/*.xml
+  mapper-locations: classpath*:/mapper/**/*.xml
   global-config:
     db-config:
       id-type: auto
 
 server:
   port: 9000
+
+mymall:
+  thread:
+    core-pool-size: 20
+    max-pool-size: 200
+    keep-alive-time: 10
+
+#seata:
+#  tx-service-group: default_tx_group
+#  enable-auto-data-source-proxy: false
+#  registry:
+#    type: nacos
+#    nacos:
+#      application: seata-server
+#      server-addr: 127.0.0.1:8848
+#      group : DEFAULT_GROUP
+#      namespace:
+#      username: ""
+#      password: ""
+#      context-path: ""
+#  config:
+#    type: nacos
+#    nacos:
+#      server-addr: 127.0.0.1:8848
+#      group: DEFAULT_GROUP
+#      namespace: seata
+#  service:
+#    vgroup-mapping:
+#      default_tx_group: "default"
+#    enable-degrade: false
+#  client:
+#    rm:
+#      # 是否上报成功状态
+#      report-success-enable: true
+#      # 重试次数
+#      report-retry-count: 5
+#      async-commit-buffer-limit: 10000
+#    tm:
+#      commit-retry-count: 5
+#      rollback-retry-count: 5
+#    undo:
+#      log-serialization: jackson
+#      log-table: undo_log
+#    transaction:
+#      undo:
+#        data-validation: true
+#      max-commit-retry-timeout: 20000
+
+
+

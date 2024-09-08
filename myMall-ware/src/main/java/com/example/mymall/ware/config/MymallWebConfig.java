@@ -16,5 +16,6 @@ public class MymallWebConfig extends WebMvcConfigurationSupport {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(cartInterceptor).addPathPatterns("/**");
+//        registry.addInterceptor(new SeataHandlerInterceptor()).addPathPatterns("/**");
     }
 }

@@ -31,7 +31,6 @@
         <module>myMall-ware</module>
         <module>myMall-search</module>
         <module>renren-fast</module>
-        <module>renren-generator</module>
     </modules>
 
 </project>

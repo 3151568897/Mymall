@@ -80,6 +80,11 @@ spring:
           predicates:
             - Host=cart.mymall.com
 
+        - id: mymall_order_route
+          uri: lb://myMall-order
+          predicates:
+            - Host=order.mymall.com
+
         - id: mymall_host_route
           uri: lb://myMall-product
           predicates:

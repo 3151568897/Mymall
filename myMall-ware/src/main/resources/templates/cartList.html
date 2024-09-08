@@ -32,7 +32,7 @@
 						</li>
 						<li><a href="http://auth.mymall.com/register.html" th:if="${session.loginUser==null}">免费注册</a></li>
 						<li class="spacer"></li>
-						<li><a href="/static/cart/">我的订单</a></li>
+						<li><a href="http://order.mymall.com/list.html">我的订单</a></li>
 						<li class="spacer"></li>
 
 					</ul>
@@ -219,7 +219,12 @@
 	<script src="/static/cart/js/index.js" charset="utf-8"></script>
 	<script type="text/javascript">
 		function toTrade() {
-			window.location.href = "http://cart.mymall.com/toTrade";
+			var number = checkedItemCount()
+			if(number===0){
+				alert("请至少选中一件商品！");
+				return;
+			}
+			window.location.href = "http://order.mymall.com/toTrade";
 		}
 
 		function toItem(skuId) {
@@ -767,6 +772,7 @@
 		$(".itemCheck").click(function (){
 			var skuid = $(this).attr("skuid");
 			var check = $(this).prop("checked");
+
 			location.href = "http://cart.mymall.com/checkItem?skuId="+skuid+"&check="+check;
 		})
 
@@ -789,5 +795,28 @@
 				location.href = "http://cart.mymall.com/deleteItem?skuId="+deleteId;
 			}
 		}
+		//获取商品选中的数量
+		function checkedItemCount(){
+			var count = 0;
+			$(".itemCheck:checked").each(function (){
+				count++;
+			})
+			console.log(count);
+			return count;
+		}
+		//全选
+		$(".allCheck").click(function (){
+			var check = $(this).prop("checked");
+			window.location.href = "http://cart.mymall.com/allCheck?check="+check;
+		})
+
+		$(document).ready(function() {
+			var number = checkedItemCount();
+			if(number===0){
+				$(".allCheck").prop("checked", false);
+			}else {
+				$(".allCheck").prop("checked", true);
+			}
+		})
 	</script>
 </html>

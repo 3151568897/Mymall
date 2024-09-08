@@ -56,7 +56,10 @@ public class CartVO {
 
     public BigDecimal getTotalAmount() {
         if(this.items != null && this.items.size() > 0){
-            BigDecimal decimal = this.items.stream().map(CartItemVO::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal decimal = this.items.stream().
+                    filter(CartItemVO::getCheck).
+                    map(CartItemVO::getTotalPrice).
+                    reduce(BigDecimal.ZERO, BigDecimal::add);
             //减去减免价格
             return decimal.subtract(this.getReduce());
         }

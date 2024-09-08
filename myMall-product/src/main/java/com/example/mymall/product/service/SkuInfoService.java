@@ -8,6 +8,7 @@ import com.example.mymall.product.vo.ItemSaleAttrsVO;
 import com.example.mymall.product.vo.SkuItemVO;
 import com.example.mymall.product.vo.SkuVO;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -31,5 +32,7 @@ public interface SkuInfoService extends IService<SkuInfoEntity> {
     SkuItemVO item(Long skuId);
 
     List<ItemSaleAttrsVO> getSaleAttrsBySpuId(Long spuId);
+
+    BigDecimal getPrice(Long skuId);
 }
 

@@ -1,5 +1,6 @@
 package com.example.mymall.product.app;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -29,6 +30,17 @@ import com.example.common.utils.R;
 public class SkuInfoController {
     @Autowired
     private SkuInfoService skuInfoService;
+
+
+    /**
+     * 获取当时商品的价格
+     */
+    @RequestMapping("/{skuId}/price")
+    public BigDecimal getPrice(@PathVariable("skuId") Long skuId){
+        BigDecimal skuInfoPrice = skuInfoService.getPrice(skuId);
+
+        return skuInfoPrice;
+    }
 
     /**
      * 列表

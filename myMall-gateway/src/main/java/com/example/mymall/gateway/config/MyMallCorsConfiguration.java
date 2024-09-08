@@ -26,6 +26,7 @@ public class MyMallCorsConfiguration {
         config.addAllowedMethod("*");
         // 允许的域
         config.addAllowedOrigin("http://localhost:8001");
+        config.addAllowedOriginPattern("http://*.mymall.com");
         // 允许凭证
         config.setAllowCredentials(true);
         // 设置跨域请求的缓存时间
