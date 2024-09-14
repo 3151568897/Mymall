@@ -15,7 +15,6 @@ import com.example.mymall.product.vo.SkuVO;
 import com.example.mymall.product.vo.SpuInfoBaseAttrsSaveVO;
 import com.example.mymall.product.vo.SpuInfoBoundsSaveVO;
 import com.example.mymall.product.vo.SpuInfoSaveVO;
-import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +67,6 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         return new PageUtils(page);
     }
 
-    @GlobalTransactional
     @Transactional
     @Override
     public void saveSpuInfo(SpuInfoSaveVO spuInfoSaveVO) {

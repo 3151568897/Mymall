@@ -60,6 +60,11 @@ mymall:
     max-pool-size: 200
     keep-alive-time: 10
 
+alipay:
+  gatewayUrl: https://openapi-sandbox.dl.alipaydev.com/gateway.do
+  appId: 9021000140671394
+  charset: utf-8
+
 #seata:
 #  tx-service-group: default_tx_group
 #  enable-auto-data-source-proxy: false

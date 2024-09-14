@@ -55,4 +55,12 @@ public class OrderWebController {
         model.addAttribute("submitOrderResp", orderSubmitResponseVO);
         return "pay";
     }
+
+    @GetMapping("/orderList.html")
+    public String orderListPage(){
+        //查出当前登录用户的所有订单列表数据
+
+
+        return "list";
+    }
 }

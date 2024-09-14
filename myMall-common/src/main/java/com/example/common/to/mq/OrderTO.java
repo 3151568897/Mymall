@@ -21,7 +21,6 @@ public class OrderTO {
 	/**
 	 * id
 	 */
-	@TableId
 	private Long id;
 	/**
 	 * member_id

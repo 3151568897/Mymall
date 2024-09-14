@@ -28,6 +28,7 @@ import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -209,13 +210,40 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         responseVO.setOrder(order.getOrder());
         responseVO.setCode(0);
         //订单创建成功 发送给mq
-        rabbitTemplate.convertAndSend("order-event-exchange", "order.create.order", order.getOrder());
+        try {
+            //TODO 保证消息一定发送出去,每一个都要有日志记录(给数据库保存每一个消息的详细信息)
+            rabbitTemplate.convertAndSend("order-event-exchange", "order.create.order", order.getOrder());
+        }catch (Exception e){
+            //TODO 重试
+            log.error("发送订单创建事件异常", e);
+        }
         return responseVO;
     }
 
     @Override
     public OrderEntity getOrderByOrderSn(String orderSn) {
         return this.getOne(new QueryWrapper<OrderEntity>().eq("order_sn", orderSn));
+    }
+
+    @Override
+    public PayVo getOrderPay(String orderSn) {
+        PayVo payVo = new PayVo();
+        OrderEntity orderEntity = this.getOrderByOrderSn(orderSn);
+        //总额
+        BigDecimal payAmount = orderEntity.getPayAmount().setScale(2, RoundingMode.UP);
+        payVo.setTotal_amount(payAmount.toString());
+        //订单号
+        payVo.setOut_trade_no(orderSn);
+        //订单名称
+        List<OrderItemEntity> orderItemEntityList = orderItemService.list(new QueryWrapper<OrderItemEntity>().eq("order_sn", orderSn));
+        OrderItemEntity itemEntity = orderItemEntityList.get(0);
+        payVo.setSubject("mymall");
+//        payVo.setSubject(itemEntity.getSkuName());
+        //订单描述
+//        payVo.setBody(itemEntity.getSkuAttrsVals());
+        payVo.setBody("mymall Goods");
+
+        return payVo;
     }
 
     /**
